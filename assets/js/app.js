@@ -1,5 +1,16 @@
 const cl = console.log;
 
+const stdContainer = document.getElementById('stdContainer')
+const stdForm = document.getElementById('stdForm')
+const fnameControl = document.getElementById('fname')
+const lnameControl = document.getElementById('lname')
+const emailControl = document.getElementById('email')
+const contactControl = document.getElementById('contact')
+const addStdBtn = document.getElementById('addStdBtn')
+const updateStdBtn = document.getElementById('updateStdBtn')
+const stdTbale = document.getElementById('stdTable')
+const noStdMsg = document.getElementById('noStdMsg')
+
 
 let stdArr = [
     {
@@ -25,3 +36,29 @@ let stdArr = [
     
     }
 ]
+
+function createTrs(arr){
+    let result = '';
+arr.forEach((std,i) =>{
+    // cl(std)
+    result += `
+            <tr id="${std.stdId}">
+                            <td>${i + 1}</td>
+                            <td>${std.fname} ${std.lname}</td>
+                            <td>${std.email}</td>
+                            <td>${std.contact}</td>
+                            <td>
+                                <i onClick="onStdEdit(this)"
+                                 role="button" class="fa-solid fa-pen-to-square fa-2x text-success"></i>
+                                </td>
+                                <td>
+                                <i onClick="onStdRemove(this)" 
+                                role="button" class="fa-solid fa-trash fa-2x text-danger"></i>
+                            </td>
+                        </tr>`
+    
+})
+
+stdContainer.innerHTML = result;
+}
+createTrs(stdArr)

@@ -62,3 +62,29 @@ arr.forEach((std,i) =>{
 stdContainer.innerHTML = result;
 }
 createTrs(stdArr)
+
+function onStdRemove(ele){
+    let REMOVE_ID = ele.closest('tr').id
+    let getConfirm = confirm(`Are you sure,you want to remove the student with ID ${REMOVE_ID} ?`)
+    cl(getConfirm)
+    if(getConfirm){
+        let getIndex = stdArr.findIndex(std => {
+            return std.stdId === REMOVE_ID
+        })
+        let REMOVE_STD = stdArr.splice(getIndex,1)
+        ele.closest('tr').remove()
+        let allTrs = [...document.querySelectorAll('#stdContainer tr')]
+        allTrs.forEach((tr,i) => {
+            tr.firstElementChild.innerText = i + 1
+        })
+        Swal.fire({
+            title:`The student ${REMOVE_STD[0].fname} ${REMOVE_STD[0].lname} successfully!!!`,
+            icon:"success",
+            timer:3000
+        })
+        if(stdArr.length == 0){
+            stdTbale.classList.add('d-none')
+            noStdMsg.classList.remove('d-none')
+        }
+    }
+}

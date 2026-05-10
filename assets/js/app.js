@@ -88,3 +88,101 @@ function onStdRemove(ele){
         }
     }
 }
+
+let EDIT_ID 
+function onStdEdit(ele){
+    EDIT_ID = ele.closest('tr').id 
+    let EDIT_OBJ = stdArr.find(std => {
+        return std.stdId === EDIT_ID
+    })
+
+    fnameControl.value = EDIT_OBJ.fname
+    lnameControl.value = EDIT_OBJ.lname
+    emailControl.value = EDIT_OBJ.email
+    contactControl.value = EDIT_OBJ.contact
+
+    addStdBtn.classList.add('d-none')
+    updateStdBtn.classList.remove('d-none')
+}
+
+function onStdSubmit(eve){
+    eve.preventDefault()
+    let NEW_STD = {
+        fname : fnameControl.value,
+        lname : lnameControl.value,
+        email : emailControl.value,
+        contact : contactControl.value,
+        stdId : Date.now.toString()
+    }
+    cl(NEW_STD)
+
+    stdArr.push(NEW_STD)
+
+    stdForm.reset()
+
+    // we will create a new tr and append it in tbody
+
+    let tr = document.createElement('tr')
+
+    tr.innerHTML = `<td>1</td>
+                            <td>${NEW_STD.fname} ${NEW_STD.lname}</td>
+                            <td>${NEW_STD.email}</td>
+                            <td>${NEW_STD.contact}</td>
+                            <td>
+                                <i onClick="onStdEdit(this)"
+                                 role="button" class="fa-solid fa-pen-to-square fa-2x text-success"></i>
+                                </td>
+                                <td>
+                                <i onClick="onStdRemove(this)" 
+                                role="button" class="fa-solid fa-trash fa-2x text-danger"></i>
+                            </td>`
+    
+      stdContainer.append(tr)  
+      
+    Swal.fire({
+        title:`The new student ${NEW_STD.fname} ${NEW_STD.lname} added successfully!!!`,
+        icon:"success",
+        timer : 3000
+    })  
+
+    if(stdArr.length > 0){
+        stdTbale.classList.remove('d-none')
+        noStdMsg.classList.add('d-none')
+
+        templating(stdArr);
+    }else{
+        stdTbale.classList.add('d-none')
+        noStdMsg.classList.remove('d-none')
+    }
+}
+
+function onStdUpdate(e){
+    let UPDATE_ID = EDIT_ID
+    let UPDATE_OBJ = {
+        fname: fnameControl.vlaue,
+        lname : lnameControl.value,
+        email: emailControl.value,
+        contact : contactControl.value,
+        stdId : UPDATE_ID
+    }
+    stdForm.reset()
+    let getIndex = stdArr.findIndex(std => std.stdId === UPDATE_ID)
+    stdArr[getIndex] = UPDATE_OBJ
+
+    let tr = document.getElementById(UPDATE_ID).children
+    tr[1].innerText = `${UPDATE_OBJ.fname} ${UPDATE_OBJ.lname}`
+    tr[2].innerText = `${UPDATE_OBJ.email}`
+    tr[3].innerText = `${UPDATE_OBJ.contact}`
+
+    addStdBtn.classList.remove('d-none')
+    updateStdBtn.classList.add('d-none')
+
+    Swal.fire({
+        title:`The student ${UPDATE_OBJ.fname} ${UPDATE_OBJ.lname} updated successfully!!!`,
+        icon:'success',
+        timer: 3000
+    })
+}
+
+stdForm.addEventListener('submit',onStdSubmit)
+updateStdBtn.addEventListener('click',onStdUpdate)
